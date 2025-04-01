@@ -5,7 +5,7 @@ session_start(); // Start session to access cart data
 $host = 'localhost'; // Change if your database is hosted elsewhere
 $db = 'cbrown'; // Replace with your database name
 $user = 'root'; // Replace with your database username
-$pass = ''; // Replace with your database password
+$pass = 'aniket'; // Replace with your database password
 
 // Create connection
 $conn = new mysqli($host, $user, $pass, $db);
@@ -25,13 +25,16 @@ if (!empty($_SESSION['cart']) && isset($_SESSION['table']) && !is_null($_POST['n
         $totalAmount += $item['price'] * $item['quantity'];
     }
 
-    // Get name and phone number from POST request
+    // Get name, phone number, and email from POST request
     $name = $_POST['name'];
     $phone = $_POST['phone'];
+    $email = $_POST['email'];
+
 
     // Insert order into the database
-    $stmt = $conn->prepare("INSERT INTO orders (table_no, grand_total, customer_name, customer_phone) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("sdss", $table, $totalAmount, $name, $phone);
+    $stmt = $conn->prepare("INSERT INTO orders (table_no, grand_total, customer_name, customer_phone, customer_email) VALUES (?, ?, ?, ?, ?)");
+    $stmt->bind_param("sdsss", $table, $totalAmount, $name, $phone, $email);
+
 
     if ($stmt->execute()) {
         $orderId = $conn->insert_id; // Fetch the order_id of the newly created order
